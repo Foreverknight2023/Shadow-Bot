@@ -20,20 +20,37 @@ class ShadowBot(commands.Bot):
         )
 
     async def setup_hook(self):
-        # تحميل جميع ملفات cogs
-        for filename in os.listdir("./cogs"):
-            if not filename.endswith(".py"):
-                continue
 
-            try:
-                await self.load_extension(f"cogs.{filename[:-3]}")
-                print(f"✅ Loaded {filename}")
-            except Exception as e:
-                print(f"⚠️ Skipped {filename}: {e}")
+        # تحميل جميع الـ Cogs
+        for root, _, files in os.walk("cogs"):
+            for file in files:
+                if not file.endswith(".py"):
+                    continue
 
+                # تجاهل ملفات __init__.py
+                if file == "__init__.py":
+                    continue
+
+                full_path = os.path.join(root, file)
+                module = full_path[:-3].replace(os.sep, ".")
+
+                try:
+                    await self.load_extension(module)
+                    print(f"✅ Loaded {module}")
+                except Exception as e:
+                    print(f"⚠️ Skipped {module}: {e}")
+
+        print("=" * 50)
         print("✅ All Cogs Loaded")
+        print("=" * 50)
 
-        synced = await self.tree.sync()
+        guild = discord.Object(id=GUILD_ID)
+
+        # نسخ الأوامر للسيرفر للتجربة السريعة
+        self.tree.copy_global_to(guild=guild)
+
+        synced = await self.tree.sync(guild=guild)
+
         print(f"✅ Synced {len(synced)} Commands")
 
     async def on_ready(self):
