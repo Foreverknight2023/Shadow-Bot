@@ -33,7 +33,7 @@ class ShadowBot(commands.Bot):
 
         print("✅ All Cogs Loaded")
 
-        synced = await self.tree.sync(guild=discord.Object(id=GUILD_ID))
+        synced = await self.tree.sync()
         print(f"✅ Synced {len(synced)} Commands")
 
     async def on_ready(self):

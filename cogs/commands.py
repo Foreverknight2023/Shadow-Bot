@@ -20,7 +20,7 @@ class HelpCog(commands.Cog):
 
         embed.add_field(
             name="📋 الأوامر",
-            value="`/ping`\n`/commands`",
+            value="`/ping`\n`/commands`\n`/serverinfo'\n'/userinfo`",
             inline=False
         )
 
