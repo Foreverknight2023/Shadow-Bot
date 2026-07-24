@@ -16,7 +16,8 @@ class ShadowBot(commands.Bot):
         super().__init__(
             command_prefix="!",
             intents=intents,
-            help_command=None
+            help_command=None,
+            intents=intents
         )
 
     async def setup_hook(self):
@@ -27,12 +28,10 @@ class ShadowBot(commands.Bot):
                 if not file.endswith(".py"):
                     continue
 
-                # تجاهل ملفات __init__.py
                 if file == "__init__.py":
                     continue
 
-                full_path = os.path.join(root, file)
-                module = full_path[:-3].replace(os.sep, ".")
+                module = os.path.join(root, file)[:-3].replace(os.sep, ".")
 
                 try:
                     await self.load_extension(module)
@@ -45,9 +44,6 @@ class ShadowBot(commands.Bot):
         print("=" * 50)
 
         guild = discord.Object(id=GUILD_ID)
-
-        # نسخ الأوامر للسيرفر للتجربة السريعة
-        self.tree.copy_global_to(guild=guild)
 
         synced = await self.tree.sync(guild=guild)
 
